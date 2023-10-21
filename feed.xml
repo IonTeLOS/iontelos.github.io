@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+    <title>TeLOS</title>
+    <link href="https://iontelos.github.io/feed.xml" rel="self" />
+    <link href="https://iontelos.github.io" />
+    <updated>2023-10-21T23:59:13+03:00</updated>
+    <author>
+        <name>Ion</name>
+    </author>
+    <id>https://iontelos.github.io</id>
+
+    <entry>
+        <title>TeLOS Linux</title>
+        <author>
+            <name>Ion</name>
+        </author>
+        <link href="https://iontelos.github.io/telos-linux.html"/>
+        <id>https://iontelos.github.io/telos-linux.html</id>
+
+        <updated>2023-10-21T23:59:13+03:00</updated>
+            <summary>
+                <![CDATA[
+                    Sourceforge website coming soon | we are working on it.. 👷❤️👷‍♀️ visit Facebook page
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                <p class="align-center"><strong><a href="https://teloslinux.sourceforge.io" title="our Sourceforge download page" target="_blank" rel="noopener noreferrer">Sourceforge</a></strong></p>
+<p class="align-center"><strong>website coming soon | we are working on it..</strong></p>
+<p class="align-center">👷❤️👷‍♀️</p>
+<p class="align-center"><a href="https://www.facebook.com/teloslinux" title="our Fb page">visit Facebook page</a></p>
+<p><a href="https://teloslinux.sourceforge.io" title="Our Sourceforge download page" target="_blank" rel="noopener noreferrer"></a> </p>
+            ]]>
+        </content>
+    </entry>
+</feed>
