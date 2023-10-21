@@ -10,19 +10,5 @@
         "name": "Ion"
     },
     "items": [
-        {
-            "id": "https://iontelos.github.io/telos-linux.html",
-            "url": "https://iontelos.github.io/telos-linux.html",
-            "title": "TeLOS Linux",
-            "summary": "Sourceforge website coming soon | we are working on it.. 👷❤️👷‍♀️ visit Facebook page",
-            "content_html": "<p class=\"align-center\"><strong><a href=\"https://teloslinux.sourceforge.io\" title=\"our Sourceforge download page\" target=\"_blank\" rel=\"noopener noreferrer\">Sourceforge</a></strong></p>\n<p class=\"align-center\"><strong>website coming soon | we are working on it..</strong></p>\n<p class=\"align-center\">👷❤️👷‍♀️</p>\n<p class=\"align-center\"><a href=\"https://www.facebook.com/teloslinux\" title=\"our Fb page\">visit Facebook page</a></p>\n<p><a href=\"https://teloslinux.sourceforge.io\" title=\"Our Sourceforge download page\" target=\"_blank\" rel=\"noopener noreferrer\"></a> </p>",
-            "author": {
-                "name": "Ion"
-            },
-            "tags": [
-            ],
-            "date_published": "2023-10-21T23:54:00+03:00",
-            "date_modified": "2023-10-21T23:59:13+03:00"
-        }
     ]
 }
