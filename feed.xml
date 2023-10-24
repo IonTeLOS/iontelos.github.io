@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
     <title>TeLOS</title>
-    <link href="https://iontelos.github.io/feed.xml" rel="self" />
-    <link href="https://iontelos.github.io" />
+    <link href="https://teloslinux.org/feed.xml" rel="self" />
+    <link href="https://teloslinux.org" />
     <updated>2023-10-22T00:30:45+03:00</updated>
     <author>
         <name>Ion</name>
     </author>
-    <id>https://iontelos.github.io</id>
+    <id>https://teloslinux.org</id>
 
     <entry>
         <title>TeLOS Linux</title>
         <author>
             <name>Ion</name>
         </author>
-        <link href="https://iontelos.github.io/telos-linux.html"/>
-        <id>https://iontelos.github.io/telos-linux.html</id>
+        <link href="https://teloslinux.org/telos-linux.html"/>
+        <id>https://teloslinux.org/telos-linux.html</id>
 
         <updated>2023-10-22T00:30:45+03:00</updated>
             <summary>
