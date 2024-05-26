@@ -4,7 +4,7 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         './',
         './icon.png',
-        './index.html',
+        './marko.html',
         // Add other files you want to cache
       ]);
     })
