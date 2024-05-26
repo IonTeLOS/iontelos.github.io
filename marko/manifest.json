@@ -1,6 +1,6 @@
 {
   "scope": "/marko/",
-  "start_url": "/marko/index.html",
+  "start_url": "https://teloslinux.org/marko",
   "name": "Marko",
   "short_name": "Marko",
   "description": "A simple bookmarking application",
