@@ -1,4 +1,6 @@
 {
+  "scope": "/marko/",
+  "start_url": "/marko/index.html",
   "name": "Marko",
   "short_name": "Marko",
   "description": "A simple bookmarking application",
