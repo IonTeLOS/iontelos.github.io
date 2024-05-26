@@ -2,8 +2,8 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('marko-cache-v1').then(function(cache) {
       return cache.addAll([
-        '/marko',
-        '/index.html',
+        './icon.png',
+        './index.html',
         // Add other files you want to cache
       ]);
     })
