@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(function(payload) {
   var notificationOptions = {
     body: payload.notification.body,
     data: {
-      url: payload.data.url
+      url: payload.data.url || 'https://teloslinux.org/marko/newfile'
     }
   };
 
