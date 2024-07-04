@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(function(payload) {
   var notificationOptions = {
     body: payload.notification.body,
     data: {
-      url: payload.notification.data
+      url: notification.data.FCM_MSG.webpush.fcmOptions.link
     }
   };
 
