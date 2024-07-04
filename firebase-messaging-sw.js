@@ -18,34 +18,40 @@ firebase.initializeApp(firebaseConfig);
 var messaging = firebase.messaging();
 
 // Handle background messages
-messaging.onBackgroundMessage(function(payload) {
-    console.log('Received background message ', payload);
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: 'https://github.com/IonTeLOS/iontelos.github.io/blob/5d1ef458101e5cdd316e5bd0cf73fa7e8bbfed8c/icon.png', // Replace with your app's icon path
+    data: payload.data, // This will contain the FCM data payload
+  };
 
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.icon || 'https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/open_in_new/default/48px.svg',
-        data: {
-            url: payload.data.url || 'https://teloslinux.org'
-        }
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    const url = event.notification.data.url;
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-            for (const client of clientList) {
-                if (client.url === url && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(url);
-            }
-        })
-    );
+// Handle notification click event
+self.addEventListener('notificationclick', (event) => {
+  console.log('[firebase-messaging-sw.js] Notification click Received.');
+
+  event.notification.close();
+
+  // This looks to see if the current is already open and focuses if it is
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        const hadWindowToFocus = clientList.some((windowClient) => {
+          if (windowClient.url === event.notification.data.FCM_MSG.webpush.fcm_options.link) {
+            return windowClient.focus();
+          }
+          return false;
+        });
+
+        if (!hadWindowToFocus) {
+          // If a window matching the URL wasn't found, open a new one
+          clients.openWindow(event.notification.data.FCM_MSG.webpush.fcm_options.link);
+        }
+      })
+  );
 });
