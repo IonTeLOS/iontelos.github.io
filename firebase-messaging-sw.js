@@ -32,9 +32,40 @@ messaging.onBackgroundMessage(function(payload) {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', (event) => {
+  console.log('[firebase-messaging-sw.js] Notification click Received.');
+  console.log('Notification data:', event.notification.data);
+  
   event.notification.close();
+
+  const linkUrl = event.notification.data.link;
+
+  if (!linkUrl) {
+    console.log('No link found in notification data');
+    return;
+  }
+
+  console.log('Attempting to open link:', linkUrl);
+
   event.waitUntil(
-    clients.openWindow(event.notification.data.url)
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (let client of clientList) {
+          if (client.url === linkUrl) {
+            return client.focus();
+          }
+        }
+        return clients.openWindow(linkUrl);
+      })
+      .then((windowClient) => {
+        if (windowClient) {
+          console.log('Successfully opened or focused window');
+        } else {
+          console.log('Failed to open window');
+        }
+      })
+      .catch((error) => {
+        console.error('Error opening window:', error);
+      })
   );
 });
