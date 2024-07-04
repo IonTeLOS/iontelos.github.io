@@ -17,24 +17,35 @@ firebase.initializeApp(firebaseConfig);
 // Initialize Firebase Messaging
 var messaging = firebase.messaging();
 
+// Handle background messages
 messaging.onBackgroundMessage(function(payload) {
-  console.log('Received background message ', payload);
+    console.log('Received background message ', payload);
 
-  // Customize notification here
-  var notificationTitle = payload.notification.title;
-  var notificationOptions = {
-    body: payload.notification.body,
-    data: {
-      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}` || 'https://teloslinux.org'
-    }
-  };
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: payload.notification.icon || 'https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/open_in_new/default/48px.svg',
+        data: {
+            url: payload.fcmOptions.link || `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
+        }
+    };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow(event.notification.data.url)
-  );
+    event.notification.close();
+    const url = event.notification.data.url;
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+            for (const client of clientList) {
+                if (client.url === url && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
+        })
+    );
 });
