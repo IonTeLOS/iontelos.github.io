@@ -21,14 +21,16 @@ messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
   // Customize notification here
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
+  var notificationTitle = payload.notification.title;
+  var notificationOptions = {
     body: payload.notification.body,
-    icon: payload.notification.icon || 'https://github.com/IonTeLOS/iontelos.github.io/blob/main/icon.png', 
     data: {
-      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}` || 'https://cnn.com'
+      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}` || 'https://teloslinux.org'
     }
   };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
