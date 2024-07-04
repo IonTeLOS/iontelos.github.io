@@ -26,7 +26,7 @@ messaging.onBackgroundMessage(function(payload) {
         body: payload.notification.body,
         icon: payload.notification.icon || 'https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/open_in_new/default/48px.svg',
         data: {
-            url: payload.fcmOptions.link || `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
+            url: payload.data.url || 'https://teloslinux.org'
         }
     };
 
