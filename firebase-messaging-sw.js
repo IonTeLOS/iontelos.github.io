@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(function(payload) {
   var notificationOptions = {
     body: payload.notification.body,
     data: {
-      url: payload.data.link
+      url: payload.notification.data
     }
   };
 
