@@ -11,21 +11,18 @@ const firebaseConfig = {
   appId: "1:7036670175:web:99992356716578ea13996a"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
-// Initialize Firebase Messaging
-var messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
-  // Customize notification here
-  var notificationTitle = payload.notification.title;
-  var notificationOptions = {
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
     body: payload.notification.body,
+    icon: payload.notification.icon,
     data: {
-      url: payload.data.url || 'https://teloslinux.org/marko/newfile'
+      url: payload.fcmOptions?.link || 'https://teloslinux.org/marko/newfile'
     }
   };
 
