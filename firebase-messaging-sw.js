@@ -22,7 +22,7 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: payload.fcmOptions?.link || 'https://teloslinux.org/marko/newfile'
+      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
     }
   };
 
