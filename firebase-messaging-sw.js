@@ -17,8 +17,8 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
+  var notificationTitle = payload.notification.title;
+  var notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
@@ -30,6 +30,7 @@ messaging.onBackgroundMessage(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
+  event.preventDefault();
   event.notification.close();
   event.waitUntil(
     clients.openWindow(event.notification.data.url)
