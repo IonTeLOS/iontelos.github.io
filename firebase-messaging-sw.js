@@ -51,8 +51,10 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
   const clickAction = event.notification.data.click_action || event.notification.click_action;
+  const urlToOpen = clickAction || event.notification.data.url;
 
   event.waitUntil(
-    clients.openWindow(clickAction)
+    clients.openWindow(urlToOpen)
   );
 });
+
