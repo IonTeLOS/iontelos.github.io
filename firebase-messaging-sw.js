@@ -40,7 +40,7 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      link: payload.data.path,
+      path: payload.data.uuid,
     }
   };
 
@@ -49,8 +49,9 @@ self.registration.showNotification(notificationTitle, notificationOptions);
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  
+
+  const newUrl = 
   event.waitUntil(
-    clients.openWindow(event.notification.data.link)
+    clients.openWindow("https://in.gr")
   );
 });
