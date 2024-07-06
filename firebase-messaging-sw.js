@@ -1,5 +1,5 @@
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/firebase/8.6.2/firebase-app.js'); 
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/firebase/8.6.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js');
 
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
@@ -11,45 +11,47 @@ const firebaseConfig = {
   appId: "1:7036670175:web:99992356716578ea13996a"
 };
 
-firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging();
+try {
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  messaging.onBackgroundMessage((payload) => {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: payload.notification.icon,
-    data: {
-      path: payload.data.uuid,
-    }
-  };
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: payload.notification.icon,
+      data: payload.data
+    };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
-});
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  });
 
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  const path = event.notification.data.path;
+  self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    const path = event.notification.data.path;
 
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then(clientList => {
-      if (clientList.length > 0) {
-        // Focus on the first client that is already open
-        return clientList[0].focus().then(client => {
-          client.postMessage({
-            action: 'open_url',
-            url: `https://teloslinux.org/marko/newfile?uuid=${path}`
+    event.waitUntil(
+      clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      }).then(clientList => {
+        if (clientList.length > 0) {
+          // Focus on the first client that is already open
+          return clientList[0].focus().then(client => {
+            client.postMessage({
+              action: 'open_url',
+              url: path
+            });
           });
-        });
-      } else {
-        // If no clients are open, open a new window
-        return clients.openWindow(`https://teloslinux.org/marko/newfile?uuid=${path}`);
-      }
-    })
-  );
-});
+        } else {
+          // If no clients are open, open a new window
+          return clients.openWindow(path);
+        }
+      })
+    );
+  });
+} catch (error) {
+  console.error('Firebase initialization error in Service Worker:', error);
+}
