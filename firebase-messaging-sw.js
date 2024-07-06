@@ -14,46 +14,42 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-self.addEventListener('install', (event) => {
-  console.log('Service Worker installing.');
-  self.skipWaiting();
-});
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating.');
-  event.waitUntil(
-    self.clients.claim()
-  );
-});
-
-messaging.onBackgroundMessage(function(payload) {
-  console.log('Received background message ', payload);
-
-  // Check if it's a mobile device
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    // This is likely a mobile device, don't show the notification
-    return;
-  }
-
- const notificationTitle = payload.notification.title;
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: payload.data.url
+      path: payload.data.uuid,
     }
   };
 
-self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-
-  const myMarko = event.notification.data.url;
+  const newUrl = event.notification.data.path;
 
   event.waitUntil(
-    clients.openWindow(myMarko)
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    }).then(clientList => {
+      if (clientList.length > 0) {
+        // Focus on the first client that is already open
+        return clientList[0].focus().then(client => {
+          client.postMessage({
+            action: 'open_url',
+            url: `https://teloslinux.org/marko/newfile?uiid=${newUrl}`
+          });
+        });
+      } else {
+        // If no clients are open, open a new window
+        return clients.openWindow(`https://teloslinux.org/marko/newfile?uiid=${newUrl}`);
+      }
+    })
   );
 });
-
