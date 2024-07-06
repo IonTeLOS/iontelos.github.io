@@ -40,7 +40,7 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: payload.data.url // Ensure the correct URL is used
+      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
     }
   };
 
@@ -50,11 +50,10 @@ self.registration.showNotification(notificationTitle, notificationOptions);
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  const clickAction = event.notification.data.click_action || event.notification.click_action;
-  const urlToOpen = clickAction || event.notification.data.url;
+  const myMarko = event.notification.data.url;
 
   event.waitUntil(
-    clients.openWindow(urlToOpen)
+    clients.openWindow(myMarko)
   );
 });
 
