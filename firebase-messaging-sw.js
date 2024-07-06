@@ -26,15 +26,15 @@ messaging.onBackgroundMessage((payload) => {
       path: payload.data.uuid
     }
   };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
-});
-
 localforage.setItem('newNot', payload.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
