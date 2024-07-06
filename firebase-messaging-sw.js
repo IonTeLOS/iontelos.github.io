@@ -23,22 +23,40 @@ messaging.onBackgroundMessage(function(payload) {
     return;
   }
 
-  var notificationTitle = payload.notification.title;
-  var notificationOptions = {
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
-    data: {
-      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
-    }
+    data: payload.data,
+    tag: payload.data.uuid, // Use uuid as tag to avoid duplicate notifications
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
-  event.preventDefault();
+  console.log('Notification click received.');
+
   event.notification.close();
+
+  let url = event.notification.data.url;
+  if (!url) {
+    url = `https://teloslinux.org/marko/newfile?uuid=${event.notification.data.uuid}`;
+  }
+
   event.waitUntil(
-    clients.openWindow(event.notification.data.url)
+    clients.matchAll({type: 'window'}).then(windowClients => {
+      // Check if there is already a window/tab open with the target URL
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        if (client.url === url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // If no window/tab is already open, open a new one
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
   );
 });
