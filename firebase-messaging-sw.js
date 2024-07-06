@@ -40,7 +40,7 @@ const notificationTitle = payload.notification.title;
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: payload.data.url || `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
+      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
     },
     tag: payload.data.uuid // Use uuid as tag to avoid duplicate notifications
   };
