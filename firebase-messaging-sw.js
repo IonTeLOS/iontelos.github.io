@@ -40,21 +40,17 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: payload.data.url
+      link: payload.data.path,
     }
   };
 
 self.registration.showNotification(notificationTitle, notificationOptions);
 });
-/*
+
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-
-  const myMarko = event.notification.data.url;
-
+  
   event.waitUntil(
-    clients.openWindow(myMarko)
+    clients.openWindow(event.notification.data.link)
   );
 });
-
-*/
