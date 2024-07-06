@@ -50,19 +50,9 @@ self.registration.showNotification(notificationTitle, notificationOptions);
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
+  const clickAction = event.notification.data.click_action || event.notification.click_action;
+
   event.waitUntil(
-    // Close all windows/tabs associated with the application
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      return Promise.all(
-        windowClients.map(client => {
-          // Close each window/tab
-          return client.navigate(event.notification.data.url).then(() => client.close());
-        })
-      );
-    }).then(() => {
-      // Open a new window/tab with the URL from the notification data
-      return clients.openWindow(event.notification.data.url);
-    })
+    clients.openWindow(clickAction)
   );
 });
-
