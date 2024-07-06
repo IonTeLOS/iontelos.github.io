@@ -30,7 +30,7 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-localforage.setItem('newNot', path).then(function() {
+localforage.setItem('newNot', notification.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
