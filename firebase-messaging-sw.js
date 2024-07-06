@@ -35,40 +35,30 @@ messaging.onBackgroundMessage(function(payload) {
     return;
   }
 
-const notificationTitle = payload.notification.title;
+ const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
-    },
-    tag: payload.data.uuid // Use uuid as tag to avoid duplicate notifications
+      url: payload.data.url // Ensure the correct URL is used
+    }
   };
 
-  return self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('Notification click received.', event);
-
   event.notification.close();
-
-  const urlToOpen = event.notification.data.url;
-  console.log('URL to open:', urlToOpen);
-
   event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then(clientList => {
-      for (let i = 0; i < clientList.length; i++) {
-        let client = clientList[i];
-        if (client.url === urlToOpen && 'focus' in client) {
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if (client.url === '/' && 'focus' in client) {
           return client.focus();
         }
       }
       if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
+        return clients.openWindow(event.notification.data.url);
       }
     })
   );
