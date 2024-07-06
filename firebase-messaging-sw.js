@@ -56,7 +56,7 @@ try {
   // Caching during installation
   self.addEventListener('install', function(event) {
     event.waitUntil(
-      caches.open('marko-cache-v1').then(function(cache) {
+      caches.open('marko-cache-v2').then(function(cache) {
         return cache.addAll([
           '/',
           'newfile.html',
@@ -66,14 +66,3 @@ try {
     );
   });
 
-  // Fetching from cache
-  self.addEventListener('fetch', function(event) {
-    event.respondWith(
-      caches.match(event.request).then(function(response) {
-        return response || fetch(event.request);
-      })
-    );
-  });
-} catch (error) {
-  console.error('Firebase initialization error in Service Worker:', error);
-}
