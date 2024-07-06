@@ -14,6 +14,18 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
+self.addEventListener('install', (event) => {
+  console.log('Service Worker installing.');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating.');
+  event.waitUntil(
+    self.clients.claim()
+  );
+});
+
 messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
