@@ -1,5 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
+importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
@@ -22,11 +23,17 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      path: payload.data.uuid,
+      path: payload.data.uuid
     }
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+localforage.setItem('newNot', path).then(function() {
+  console.log('Value stored successfully in Service Worker.');
+}).catch(function(err) {
+  console.error('Error storing value in Service Worker:', err);
 });
 
 self.addEventListener('notificationclick', function(event) {
