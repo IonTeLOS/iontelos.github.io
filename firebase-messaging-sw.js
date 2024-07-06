@@ -23,40 +23,28 @@ messaging.onBackgroundMessage(function(payload) {
     return;
   }
 
-  const notificationTitle = payload.notification.title;
+const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
-    data: payload.data,
-    tag: payload.data.uuid, // Use uuid as tag to avoid duplicate notifications
+    data: {
+      url: payload.data.url || `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
+    },
+    tag: payload.data.uuid // Use uuid as tag to avoid duplicate notifications
   };
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('Notification click received.');
+  console.log('Notification click received.', event);
 
   event.notification.close();
 
-  let url = event.notification.data.url;
-  if (!url) {
-    url = `https://teloslinux.org/marko/newfile?uuid=${event.notification.data.uuid}`;
-  }
+  const urlToOpen = event.notification.data.url;
+  console.log('URL to open:', urlToOpen);
 
   event.waitUntil(
-    clients.matchAll({type: 'window'}).then(windowClients => {
-      // Check if there is already a window/tab open with the target URL
-      for (var i = 0; i < windowClients.length; i++) {
-        var client = windowClients[i];
-        if (client.url === url && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      // If no window/tab is already open, open a new one
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
-    })
+    clients.openWindow(urlToOpen)
   );
 });
