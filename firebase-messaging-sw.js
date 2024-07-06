@@ -1,41 +1,17 @@
-importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging.js');
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
-  authDomain: "marko-be9a9.firebaseapp.com",
-  databaseURL: "https://marko-be9a9-default-rtdb.firebaseio.com",
-  projectId: "marko-be9a9",
-  storageBucket: "marko-be9a9.appspot.com",
-  messagingSenderId: "7036670175",
-  appId: "1:7036670175:web:99992356716578ea13996a"
+  // Your Firebase project configuration
 };
 
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-self.addEventListener('install', (event) => {
-  console.log('Service Worker installing.');
-  self.skipWaiting();
-});
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating.');
-  event.waitUntil(
-    self.clients.claim()
-  );
-});
-
-messaging.onBackgroundMessage(function(payload) {
-  console.log('Received background message ', payload);
-
-  // Check if it's a mobile device
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    // This is likely a mobile device, don't show the notification
-    return;
-  }
-
- const notificationTitle = payload.notification.title;
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
@@ -44,14 +20,30 @@ messaging.onBackgroundMessage(function(payload) {
     }
   };
 
-self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
+  const path = event.notification.data.path;
 
-  const newUrl = "https://teloslinux.org/marko/newfile?uuid=" + event.notification.data.path;
   event.waitUntil(
-    clients.openWindow(newUrl)
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    }).then(clientList => {
+      if (clientList.length > 0) {
+        // Focus on the first client that is already open
+        return clientList[0].focus().then(client => {
+          client.postMessage({
+            action: 'open_url',
+            url: `https://teloslinux.org/marko/newfile?uuid=${path}`
+          });
+        });
+      } else {
+        // If no clients are open, open a new window
+        return clients.openWindow(`https://teloslinux.org/marko/newfile?uuid=${path}`);
+      }
+    })
   );
 });
