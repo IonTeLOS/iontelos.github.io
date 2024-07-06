@@ -11,58 +11,49 @@ const firebaseConfig = {
   appId: "1:7036670175:web:99992356716578ea13996a"
 };
 
-try {
-  const app = firebase.initializeApp(firebaseConfig);
-  const messaging = firebase.messaging();
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
 
-  messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+self.addEventListener('install', (event) => {
+  console.log('Service Worker installing.');
+  self.skipWaiting();
+});
 
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-      body: payload.notification.body,
-      icon: payload.notification.icon,
-      data: payload.data
-    };
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating.');
+  event.waitUntil(
+    self.clients.claim()
+  );
+});
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
-  });
+messaging.onBackgroundMessage(function(payload) {
+  console.log('Received background message ', payload);
 
-  self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    const path = event.notification.data.path;
+  // Check if it's a mobile device
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // This is likely a mobile device, don't show the notification
+    return;
+  }
 
-    event.waitUntil(
-      clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true
-      }).then(clientList => {
-        if (clientList.length > 0) {
-          // Focus on the first client that is already open
-          const client = clientList[0];
-          client.postMessage({
-            action: 'open_url',
-            url: path
-          });
-          return client.focus();
-        } else {
-          // If no clients are open, open a new window
-          return clients.openWindow(path);
-        }
-      })
-    );
-  });
+ const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: payload.notification.icon,
+    data: {
+      url: payload.data.url
+    }
+  };
 
-  // Caching during installation
-  self.addEventListener('install', function(event) {
-    event.waitUntil(
-      caches.open('marko-cache-v2').then(function(cache) {
-        return cache.addAll([
-          '/',
-          'newfile.html',
-          // Add other files you want to cache
-        ]);
-      })
-    );
-  });
+self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+
+  const myMarko = event.notification.data.url;
+
+  event.waitUntil(
+    clients.openWindow(myMarko)
+  );
+});
 
