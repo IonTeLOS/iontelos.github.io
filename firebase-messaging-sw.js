@@ -44,22 +44,31 @@ messaging.onBackgroundMessage(function(payload) {
     }
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      // Iterate through all window clients to find a match
       for (let i = 0; i < windowClients.length; i++) {
         const client = windowClients[i];
-        if (client.url === '/' && 'focus' in client) {
-          return client.focus();
+        // Check if the client's URL is within the same origin (domain)
+        if (client.url.startsWith(self.location.origin)) {
+          // Focus the client (bring it to the foreground)
+          return client.focus().then(() => {
+            // Navigate to the URL from notification data
+            return client.navigate(event.notification.data.url);
+          });
         }
       }
+      // If no matching client found, open a new window/tab with the URL
       if (clients.openWindow) {
         return clients.openWindow(event.notification.data.url);
       }
     })
   );
 });
+
