@@ -28,7 +28,7 @@ const notificationTitle = payload.notification.title;
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      url: `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}` || payload.notification.url
+      url: payload.data.url || `https://teloslinux.org/marko/newfile?uuid=${payload.data.uuid}`
     },
     tag: payload.data.uuid // Use uuid as tag to avoid duplicate notifications
   };
@@ -45,6 +45,19 @@ self.addEventListener('notificationclick', function(event) {
   console.log('URL to open:', urlToOpen);
 
   event.waitUntil(
-    clients.openWindow(urlToOpen)
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    }).then(clientList => {
+      for (let i = 0; i < clientList.length; i++) {
+        let client = clientList[i];
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
   );
 });
