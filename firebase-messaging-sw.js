@@ -50,8 +50,8 @@ self.registration.showNotification(notificationTitle, notificationOptions);
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  const newUrl = 
+  const newUrl = "https://teloslinux.org/marko/newfile?uuid=" + event.notification.data.path;
   event.waitUntil(
-    clients.openWindow("https://in.gr")
+    clients.openWindow(newUrl)
   );
 });
