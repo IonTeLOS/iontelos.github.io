@@ -40,10 +40,7 @@ try {
         if (clientList.length > 0) {
           // Focus on the first client that is already open
           return clientList[0].focus().then(client => {
-            client.postMessage({
-              action: 'open_url',
-              url: path
-            });
+           return clients.openWindow(path);
           });
         } else {
           // If no clients are open, open a new window
