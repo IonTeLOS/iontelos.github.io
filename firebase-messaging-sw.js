@@ -18,6 +18,12 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
+    // Check if it's a mobile device
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // This is likely a mobile device, don't show the notification
+    return;
+  }
+  
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
