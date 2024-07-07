@@ -27,14 +27,14 @@ messaging.onBackgroundMessage((payload) => {
       goto: payload.data.goto
     }
   };
-/*
+
 //store a value for the redirect to the Marko link to happen when page is opened or focused  
 localforage.setItem('newNot', payload.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
-*/
+  
       // Check if it's a mobile device
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     // This is likely a mobile device, don't show the notification but store a value for effective redirect
@@ -71,12 +71,12 @@ if (event.notification && event.notification.data) {
         return clientList[0].focus().then(client => {
           client.postMessage({
             action: 'open_url',
-            url: newUrl
+            url: ${newUrl}
           });
         });
       } else {
         // If no clients are open, open a new window
-        return clients.openWindow(`https://teloslinux.org/marko/newfile?uuid=${newUrl}`);
+        return clients.openWindow(${newUrl});
       }
     })
   );
