@@ -23,17 +23,18 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification.body,
     icon: payload.notification.icon,
     data: {
-      path: payload.data.uuid
+      path: payload.data.uuid,
+      goto: payload.data.goto
     }
   };
-
+/*
 //store a value for the redirect to the Marko link to happen when page is opened or focused  
 localforage.setItem('newNot', payload.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
-
+*/
       // Check if it's a mobile device
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     // This is likely a mobile device, don't show the notification but store a value for effective redirect
@@ -43,11 +44,22 @@ localforage.setItem('newNot', payload.data.path).then(function() {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-
-
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  const newUrl = event.notification.data.path;
+  
+let newUrl = 'https://teloslinux.org/marko/newfile';
+
+if (event.notification && event.notification.data) {
+  const path = event.notification.data.path;
+  const goTo = event.notification.data.goto;
+
+  if (path) {
+    const goUuid = path;
+    newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
+  } else if (goTo) {
+    newUrl = goTo;
+  }
+}
 
   event.waitUntil(
     clients.matchAll({
@@ -59,12 +71,12 @@ self.addEventListener('notificationclick', function(event) {
         return clientList[0].focus().then(client => {
           client.postMessage({
             action: 'open_url',
-            url: `https://teloslinux.org/marko/newfile?uiid=${newUrl}`
+            url: newUrl
           });
         });
       } else {
         // If no clients are open, open a new window
-        return clients.openWindow(`https://teloslinux.org/marko/newfile?uiid=${newUrl}`);
+        return clients.openWindow(`https://teloslinux.org/marko/newfile?uuid=${newUrl}`);
       }
     })
   );
