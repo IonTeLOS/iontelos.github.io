@@ -18,12 +18,6 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-    // Check if it's a mobile device
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    // This is likely a mobile device, don't show the notification
-    return;
-  }
-  
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
@@ -32,11 +26,20 @@ messaging.onBackgroundMessage((payload) => {
       path: payload.data.uuid
     }
   };
+
+//store a value for the redirect to the Marko link to happen when page is opened or focused  
 localforage.setItem('newNot', payload.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
+
+      // Check if it's a mobile device
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // This is likely a mobile device, don't show the notification but store a value for effective redirect
+    return;
+  }
+  
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
