@@ -57,6 +57,12 @@ self.addEventListener('notificationclick', function(event) {
       newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
     } else if (goTo) {
       newUrl = goTo;
+      //store a value for the redirect to the Marko link to happen when page is opened or focused  
+    localforage.setItem('newNotUrl', payload.data.goto).then(function() {
+      console.log('New url value stored successfully in Service Worker.');
+    }).catch(function(err) {
+      console.error('Error storing value in Service Worker:', err);
+      });
     }
   }
 
