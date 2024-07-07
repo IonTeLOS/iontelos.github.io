@@ -2,6 +2,10 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
+self.addEventListener('fetch', (event) => {
+  // The default fetch handling is sufficient for share target
+});
+
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
   authDomain: "marko-be9a9.firebaseapp.com",
