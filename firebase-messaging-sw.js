@@ -71,12 +71,12 @@ if (event.notification && event.notification.data) {
         return clientList[0].focus().then(client => {
           client.postMessage({
             action: 'open_url',
-            url: ${newUrl}
+            url: `${newUrl}`
           });
         });
       } else {
         // If no clients are open, open a new window
-        return clients.openWindow(${newUrl});
+        return clients.openWindow(`${newUrl}`);
       }
     })
   );
