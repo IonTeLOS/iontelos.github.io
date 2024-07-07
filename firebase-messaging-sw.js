@@ -33,6 +33,7 @@ localforage.setItem('newNot', payload.data.path).then(function() {
   console.log('Value stored successfully in Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
+  console.error('You may have missed a notification');
 });
 */
       // Check if it's a mobile device
