@@ -47,19 +47,19 @@ localforage.setItem('newNot', payload.data.path).then(function() {
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   
-let newUrl = 'https://teloslinux.org/marko/newfile';
+  let newUrl = 'https://teloslinux.org/marko/newfile';
 
-if (event.notification && event.notification.data) {
-  const path = event.notification.data.path;
-  const goTo = event.notification.data.goto;
+  if (event.notification && event.notification.data) {
+    const path = event.notification.data.path;
+    const goTo = event.notification.data.goto;
 
-  if (path) {
-    const goUuid = path;
-    newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
-  } else if (goTo) {
-    newUrl = goTo;
+    if (path) {
+      const goUuid = path;
+      newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
+    } else if (goTo) {
+      newUrl = goTo;
+    }
   }
-}
 
   event.waitUntil(
     clients.matchAll({
@@ -71,12 +71,12 @@ if (event.notification && event.notification.data) {
         return clientList[0].focus().then(client => {
           client.postMessage({
             action: 'open_url',
-            url: `${newUrl}`
+            url: newUrl
           });
         });
       } else {
         // If no clients are open, open a new window
-        return clients.openWindow(`${newUrl}`);
+        return clients.openWindow(newUrl);
       }
     })
   );
