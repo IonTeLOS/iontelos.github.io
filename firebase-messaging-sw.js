@@ -3,7 +3,7 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
 self.addEventListener('fetch', event => {
-  if (event.request.url.includes('/share-target/')) {
+  if (event.request.url.includes('/marko/newfile/')) {
     event.respondWith(async function() {
       const formData = await event.request.formData();
       const file = formData.get('file');
