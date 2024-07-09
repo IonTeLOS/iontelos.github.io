@@ -3,31 +3,38 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
 self.addEventListener('fetch', event => {
-  if (event.request.url.includes('/marko/newfile/')) {
-    event.respondWith(async function() {
-      const formData = await event.request.formData();
-      const file = formData.get('file');
-      const title = formData.get('title');
-      const text = formData.get('text');
-      const url = formData.get('url');
+  if (event.request.url.includes('/marko/newfile')) {
+    event.respondWith((async function() {
+      try {
+        const formData = await event.request.formData();
+        const file = formData.get('file');
+        const title = formData.get('title');
+        const text = formData.get('text');
+        const url = formData.get('url');
 
-      if (file && file.type === 'text/vcard') {
-        const vcfContent = await file.text();
-        // Store VCF content (using IndexedDB as in the previous example)
-        const db = await openDatabase();
-        await storeVCF(db, vcfContent);
-        return Response.redirect('/?vcf=true');
-      } else {
-        // Handle text/link share
-        const shareData = {
-          title: title || '',
-          text: text || '',
-          url: url || ''
-        };
-        // Store or process shareData as needed
-        return Response.redirect('/?share=' + encodeURIComponent(JSON.stringify(shareData)));
+        console.log('Received file:', file);
+        console.log('Received title:', title);
+        console.log('Received text:', text);
+        console.log('Received url:', url);
+
+        if (file && file.type === 'text/vcard') {
+          const vcfContent = await file.text();
+          const db = await openDatabase();
+          await storeVCF(db, vcfContent);
+          return Response.redirect('/?vcf=true');
+        } else {
+          const shareData = {
+            title: title || '',
+            text: text || '',
+            url: url || ''
+          };
+          return Response.redirect('/?share=' + encodeURIComponent(JSON.stringify(shareData)));
+        }
+      } catch (error) {
+        console.error('Error handling fetch event:', error);
+        return new Response('Error handling fetch event', { status: 500 });
       }
-    }());
+    })());
   }
 });
 
@@ -52,6 +59,7 @@ async function storeVCF(db, vcfContent) {
     request.onsuccess = () => resolve(request.result);
   });
 }
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
