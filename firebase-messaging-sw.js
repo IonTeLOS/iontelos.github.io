@@ -31,6 +31,28 @@ self.addEventListener('fetch', event => {
   }
 });
 
+async function openDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('VCFStorage', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      db.createObjectStore('vcfs', { autoIncrement: true });
+    };
+  });
+}
+
+async function storeVCF(db, vcfContent) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['vcfs'], 'readwrite');
+    const store = transaction.objectStore('vcfs');
+    const request = store.add({ content: vcfContent, timestamp: Date.now() });
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
   authDomain: "marko-be9a9.firebaseapp.com",
