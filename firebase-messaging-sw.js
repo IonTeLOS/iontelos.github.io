@@ -4,9 +4,12 @@ importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localfor
 
 self.addEventListener('fetch', event => {
   if (event.request.method === 'POST' && event.request.url.endsWith('/marko/newfile')) {
-    event.respondWith(handlePostRequest(event.request));
+    // Capture the POST request but prevent default behavior
+    event.respondWith(Response.ok());
+    handlePostRequest(event.request.clone()); // Clone the request for processing
   }
 });
+
 
 async function handlePostRequest(request) {
   try {
