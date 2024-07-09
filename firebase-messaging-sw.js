@@ -2,71 +2,9 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
-self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST' && event.request.url.endsWith('/marko/newfile')) {
-    // Capture the POST request but prevent default behavior
-    event.respondWith(Response.ok());
-    handlePostRequest(event.request.clone()); // Clone the request for processing
-  }
+self.addEventListener('fetch', (event) => {
+  // The default fetch handling is sufficient for share target
 });
-
-
-async function handlePostRequest(request) {
-  try {
-    const formData = await request.formData();
-    const file = formData.get('file');
-    const title = formData.get('title');
-    const text = formData.get('text');
-    const url = formData.get('url');
-
-    // Process the form data as needed
-    console.log('Received file:', file);
-    console.log('Received title:', title);
-    console.log('Received text:', text);
-    console.log('Received url:', url);
-
-    // Example: Store file content in IndexedDB
-    if (file && file.type === 'text/vcard') {
-      const vcfContent = await file.text();
-      const db = await openDatabase();
-      await storeVCF(db, vcfContent);
-      return Response.redirect('/?vcf=true');
-    } else {
-      const shareData = {
-        title: title || '',
-        text: text || '',
-        url: url || ''
-      };
-      return Response.redirect('/?share=' + encodeURIComponent(JSON.stringify(shareData)));
-    }
-  } catch (error) {
-    console.error('Error handling fetch event:', error);
-    return new Response('Error handling fetch event', { status: 500 });
-  }
-}
-
-async function openDatabase() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('VCFStorage', 1);
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      db.createObjectStore('vcfs', { autoIncrement: true });
-    };
-  });
-}
-
-async function storeVCF(db, vcfContent) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['vcfs'], 'readwrite');
-    const store = transaction.objectStore('vcfs');
-    const request = store.add({ content: vcfContent, timestamp: Date.now() });
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-  });
-}
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyD96IBVqGKVEdmXIVCYL_7kvlBhJNSD1Ww",
