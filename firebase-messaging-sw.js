@@ -2,8 +2,33 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js');
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js');
 
-self.addEventListener('fetch', (event) => {
-  // The default fetch handling is sufficient for share target
+self.addEventListener('fetch', event => {
+  if (event.request.url.includes('/share-target/')) {
+    event.respondWith(async function() {
+      const formData = await event.request.formData();
+      const file = formData.get('file');
+      const title = formData.get('title');
+      const text = formData.get('text');
+      const url = formData.get('url');
+
+      if (file && file.type === 'text/vcard') {
+        const vcfContent = await file.text();
+        // Store VCF content (using IndexedDB as in the previous example)
+        const db = await openDatabase();
+        await storeVCF(db, vcfContent);
+        return Response.redirect('/?vcf=true');
+      } else {
+        // Handle text/link share
+        const shareData = {
+          title: title || '',
+          text: text || '',
+          url: url || ''
+        };
+        // Store or process shareData as needed
+        return Response.redirect('/?share=' + encodeURIComponent(JSON.stringify(shareData)));
+      }
+    }());
+  }
 });
 
 const firebaseConfig = {
