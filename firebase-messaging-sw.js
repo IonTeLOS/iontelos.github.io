@@ -33,14 +33,14 @@ messaging.onBackgroundMessage((payload) => {
 //store a value for the redirect to the Marko link to happen when page is opened or focused  
 if (payload.data && payload.data.goto) {  
 localforage.setItem('new-nav-request', String(payload.data.goto)).then(function() {
-  console.log('Nav navigation request stored successfully in localForage from Service Worker.');
+  console.log('Navigation request stored successfully in localForage from Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
 }
 if (payload.data && payload.data.uuid) {  
 localforage.setItem('newUnopenedReminder', String(payload.data.path)).then(function() {
-  console.log('Pending seminder stored successfully in localForage from Service Worker.');
+  console.log('Pending reminder stored successfully in localForage from Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
@@ -68,7 +68,7 @@ self.addEventListener('notificationclick', function(event) {
       const goUuid = path;
       newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
     } else if (goTo) {
-      const navUrl = goTo;
+      const navUrl = String(goTo);
       newUrl = `https://teloslinux.org/marko/newfile?nav=${navUrl}`;
     }
   }
