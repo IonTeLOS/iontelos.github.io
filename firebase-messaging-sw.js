@@ -67,7 +67,7 @@ self.addEventListener('notificationclick', function(event) {
   } else if (localForage.getItem('new-nav-request')) {
     const navUrl = localForage.getItem('new-nav-request');
     newUrl = `https://teloslinux.org/marko/newfile?nav=${navUrl}`;
-    localForage.removeItem('new-nav-request');
+    //localForage.removeItem('new-nav-request');
   }
 
   event.waitUntil(
