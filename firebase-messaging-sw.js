@@ -37,6 +37,7 @@ localforage.setItem('new-nav-request', String(payload.data.goto)).then(function(
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
+}
       // Check if it's a mobile device
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     // This is likely a mobile device, don't show the notification but store a value for effective redirect
