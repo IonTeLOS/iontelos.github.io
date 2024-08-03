@@ -64,8 +64,8 @@ self.addEventListener('notificationclick', function(event) {
     const path = event.notification.data.path;
     const goUuid = path;
     newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
-  } else if (event.notification && event.notification.data.goto) {
-    const navUrl = String(event.notification.data.goto);
+  } else if (localForage.getItem('new-nav-request')) {
+    const navUrl = localForage.getItem('new-nav-request');
     newUrl = `https://teloslinux.org/marko/newfile?nav=${navUrl}`;
   }
 
