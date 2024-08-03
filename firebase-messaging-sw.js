@@ -60,14 +60,11 @@ self.addEventListener('notificationclick', function(event) {
   
   let newUrl = 'https://teloslinux.org/marko/newfile';
 
-  if (event.notification && event.notification.data) {
-    const path = event.notification.data.path;
-    const goTo = event.notification.data.goto;
-
-    if (path) {
+  if (event.notification && event.notification.data.path) {
+      const path = event.notification.data.path;
       const goUuid = path;
       newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
-    } else if (goTo) {
+  } else if (event.notification && event.notification.data.goto) {
       const navUrl = String(goTo);
       newUrl = `https://teloslinux.org/marko/newfile?nav=${navUrl}`;
     }
