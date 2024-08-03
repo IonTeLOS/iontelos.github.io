@@ -33,11 +33,19 @@ messaging.onBackgroundMessage((payload) => {
 //store a value for the redirect to the Marko link to happen when page is opened or focused  
 if (payload.data && payload.data.goto) {  
 localforage.setItem('new-nav-request', String(payload.data.goto)).then(function() {
-  console.log('Nav value stored successfully in localForage from Service Worker.');
+  console.log('Nav navigation request stored successfully in localForage from Service Worker.');
 }).catch(function(err) {
   console.error('Error storing value in Service Worker:', err);
 });
 }
+if (payload.data && payload.data.uuid) {  
+localforage.setItem('newUnopenedReminder', String(payload.data.path)).then(function() {
+  console.log('Pending seminder stored successfully in localForage from Service Worker.');
+}).catch(function(err) {
+  console.error('Error storing value in Service Worker:', err);
+});
+}
+  
       // Check if it's a mobile device
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     // This is likely a mobile device, don't show the notification but store a value for effective redirect
@@ -60,10 +68,8 @@ self.addEventListener('notificationclick', function(event) {
       const goUuid = path;
       newUrl = `https://teloslinux.org/marko/newfile?uuid=${goUuid}`;
     } else if (goTo) {
-      newUrl = goTo;
-      //store a value for the redirect to the Marko link to happen when page is opened or focused  
-      localforage.setItem('newNotifUrl', String(payload.data.goto));
-      console.log('New url value received successfully from Service Worker.');
+      const navUrl = goTo;
+      newUrl = `https://teloslinux.org/marko/newfile?nav=${navUrl}`;
     }
   }
 
