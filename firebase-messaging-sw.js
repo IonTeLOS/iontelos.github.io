@@ -61,14 +61,15 @@ const defaultIcon = 'https://raw.githubusercontent.com/IonTeLOS/marko/main/trisk
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message', payload);
 
-  const { title, body, icon, click_action } = payload.notification;
+  const { title, body, icon } = payload.notification;
+  const clickAction = payload.data.url || 'https://teloslinux.org/marko/newfile'; // Default URL if not provided
 
   // Use default icon if none is provided
   const notificationOptions = {
     body: body,
     icon: icon || defaultIcon, // Use the provided icon or default to the defaultIcon
     data: {
-      url: url // Include url in data for use in notification click event
+      url: clickAction // Include url in data for use in notification click event
     }
   };
 
