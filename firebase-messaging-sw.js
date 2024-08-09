@@ -68,7 +68,7 @@ messaging.onBackgroundMessage((payload) => {
     body: body,
     icon: icon || defaultIcon, // Use the provided icon or default to the defaultIcon
     data: {
-      click_action: click_action // Include click_action in data for use in notification click event
+      url: url // Include url in data for use in notification click event
     }
   };
 
