@@ -55,20 +55,48 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
   */
+// Default icon URL
+const defaultIcon = 'https://raw.githubusercontent.com/IonTeLOS/marko/main/triskelion.svg';
+
 messaging.onBackgroundMessage((payload) => {
-  console.log('Received background message ', payload);
+  console.log('Received background message', payload);
+
   const { title, body, icon, click_action } = payload.notification;
 
-  self.registration.showNotification(title, {
+  // Use default icon if none is provided
+  const notificationOptions = {
     body: body,
-    icon: icon,
-    click_action: click_action
-  });
+    icon: icon || defaultIcon, // Use the provided icon or default to the defaultIcon
+    data: {
+      click_action: click_action // Include click_action in data for use in notification click event
+    }
+  };
+
+  self.registration.showNotification(title, notificationOptions);
 });
+
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
+  
+  const url = event.notification.data.url;  // Extract the URL from the notification data
 
+  if (url) {
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+        // Check if the URL is already open in a tab
+        for (const client of windowClients) {
+          if (client.url === url && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(url);  // Open the URL in a new tab
+        }
+      })
+    );
+  }
+  
   let newUrl = 'https://teloslinux.org/marko/newfile';
 
   if (event.notification && event.notification.data.path) {
