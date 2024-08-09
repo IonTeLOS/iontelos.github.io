@@ -28,18 +28,8 @@ messaging.onBackgroundMessage((payload) => {
     icon: payload.notification.icon,
     data: payload.data 
   };
-  */
-messaging.onBackgroundMessage((payload) => {
-  console.log('Received background message ', payload);
-  const { title, body, icon, click_action } = payload.notification;
 
-  self.registration.showNotification(title, {
-    body: body,
-    icon: icon,
-    click_action: click_action
-  });
-});
-  // Store a value for the redirect to the Marko link to happen when page is opened or focused  
+    // Store a value for the redirect to the Marko link to happen when page is opened or focused  
   if (payload.data && payload.data.goto) {  
     localforage.setItem('new-nav-request', String(payload.data.goto)).then(function() {
       console.log('Navigation request stored successfully in localForage from Service Worker.');
@@ -63,6 +53,17 @@ messaging.onBackgroundMessage((payload) => {
   }
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+  */
+messaging.onBackgroundMessage((payload) => {
+  console.log('Received background message ', payload);
+  const { title, body, icon, click_action } = payload.notification;
+
+  self.registration.showNotification(title, {
+    body: body,
+    icon: icon,
+    click_action: click_action
+  });
 });
 
 self.addEventListener('notificationclick', function(event) {
