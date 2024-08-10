@@ -84,8 +84,9 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  
-  const url = event.notification.data.url;  // Extract the URL from the notification data
+
+  const data = event.notification.data || {};  // Ensure data is available
+  const url = data.url;  // Extract the URL from the notification data
 
   if (url) {
     event.waitUntil(
