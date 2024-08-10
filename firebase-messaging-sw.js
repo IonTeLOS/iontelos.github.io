@@ -72,6 +72,22 @@ messaging.onBackgroundMessage((payload) => {
       url: clickAction // Include url in data for use in notification click event
     }
   };
+      // Store a value for the redirect to the Marko link to happen when page is opened or focused  
+  if (payload.data && payload.data.url) {  
+    localforage.setItem('new-nav-request', String(payload.data.url)).then(function() {
+      console.log('Navigation request stored successfully in localForage from Service Worker.');
+    }).catch(function(err) {
+      console.error('Error storing value in Service Worker:', err);
+    });
+  }
+
+  if (payload.data && payload.data.uuid) {  
+    localforage.setItem('newUnopenedReminder', String(payload.data.path)).then(function() {
+      console.log('Pending reminder stored successfully in localForage from Service Worker.');
+    }).catch(function(err) {
+      console.error('Error storing value in Service Worker:', err);
+    });
+  }
   
   // Show the notification only if no other notification with the same tag exists
   self.registration.getNotifications({ tag: notificationOptions.tag }).then((notifications) => {
@@ -86,25 +102,6 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-
-  const data = event.notification.data || {};  // Ensure data is available
-  const url = data.url;  // Extract the URL from the notification data
-
-  if (url) {
-    event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-        // Check if the URL is already open in a tab
-        for (const client of windowClients) {
-          if (client.url === url && 'focus' in client) {
-            return client.focus();
-          }
-        }
-        if (clients.openWindow) {
-          return clients.openWindow(url);  // Open the URL in a new tab
-        }
-      })
-    );
-  }
   
   let newUrl = 'https://teloslinux.org/marko/newfile';
 
