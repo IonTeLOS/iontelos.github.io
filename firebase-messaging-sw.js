@@ -67,20 +67,14 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: body,
     icon: theIcon,
-    tag: payload.data.uuid || 'default-tag',  // Use a unique tag to avoid duplicates
     data: {
       url: clickAction // Include url in data for use in notification click event
     }
   };
   
-    // Check if it's a mobile device
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    // This is likely a mobile device, don't show the notification but store a value for effective redirect
-    return;
-  }
       // Store a value for the redirect to the Marko link to happen when page is opened or focused  
   if (payload.data && payload.data.url) {  
-    localforage.setItem('new-nav-request', String(payload.data.url)).then(function() {
+      localforage.setItem('new-nav-request', String(payload.data.url)).then(function() {
       console.log('Navigation request stored successfully in localForage from Service Worker.');
     }).catch(function(err) {
       console.error('Error storing value in Service Worker:', err);
@@ -88,21 +82,20 @@ messaging.onBackgroundMessage((payload) => {
   }
 
   if (payload.data && payload.data.uuid) {  
-    localforage.setItem('newUnopenedReminder', String(payload.data.path)).then(function() {
+      localforage.setItem('newUnopenedReminder', String(payload.data.path)).then(function() {
       console.log('Pending reminder stored successfully in localForage from Service Worker.');
     }).catch(function(err) {
       console.error('Error storing value in Service Worker:', err);
     });
   }
-  
-  // Show the notification only if no other notification with the same tag exists
-  self.registration.getNotifications({ tag: notificationOptions.tag }).then((notifications) => {
-    if (notifications.length === 0) {
-      self.registration.showNotification(title, notificationOptions);
-    } else {
-      console.log('Notification with this tag already exists.');
-    }
-  });
+
+      // Check if it's a mobile device
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // This is likely a mobile device, don't show the notification but store a value for effective redirect
+    return;
+  }
+
+  self.registration.showNotification(title, notificationOptions);
 });
 
 
