@@ -71,12 +71,6 @@ messaging.onBackgroundMessage((payload) => {
       url: clickAction // Include url in data for use in notification click event
     }
   };
-
-    // Check if it's a mobile device
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    // This is likely a mobile device, don't show the notification but store a value for effective redirect
-    return;
-  }
   
   self.registration.showNotification(title, notificationOptions);
 });
