@@ -55,21 +55,20 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
   */
-// Default icon URL
-const defaultIcon = 'https://raw.githubusercontent.com/IonTeLOS/marko/main/triskelion.svg';
 
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message', payload);
 
-  const { title, body, icon } = payload.notification;
+  const { title, body } = payload.notification;
+  const theIcon = payload.data.icon || 'https://raw.githubusercontent.com/IonTeLOS/marko/main/triskelion.svg'; // Default icon if not provided
   const clickAction = payload.data.url || 'https://teloslinux.org/marko/newfile'; // Default URL if not provided
 
   // Use default icon if none is provided
   const notificationOptions = {
     body: body,
-    icon: icon || defaultIcon, // Use the provided icon or default to the defaultIcon
     data: {
-      url: clickAction // Include url in data for use in notification click event
+      url: clickAction, // Include url in data for use in notification click event
+      icon: theIcon
     }
   };
 
