@@ -57,7 +57,7 @@ messaging.onBackgroundMessage((payload) => {
   */
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('Received background message', payload);
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
   const { title, body } = payload.notification;
   const theIcon = payload.data.icon || 'https://raw.githubusercontent.com/IonTeLOS/marko/main/triskelion.svg'; // Default icon if not provided
@@ -72,6 +72,12 @@ messaging.onBackgroundMessage((payload) => {
       url: clickAction // Include url in data for use in notification click event
     }
   };
+  
+    // Check if it's a mobile device
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // This is likely a mobile device, don't show the notification but store a value for effective redirect
+    return;
+  }
       // Store a value for the redirect to the Marko link to happen when page is opened or focused  
   if (payload.data && payload.data.url) {  
     localforage.setItem('new-nav-request', String(payload.data.url)).then(function() {
