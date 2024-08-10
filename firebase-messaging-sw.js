@@ -67,12 +67,20 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: body,
     icon: theIcon,
+    tag: payload.data.uuid || 'default-tag',  // Use a unique tag to avoid duplicates
     data: {
       url: clickAction // Include url in data for use in notification click event
     }
   };
   
-  self.registration.showNotification(title, notificationOptions);
+  // Show the notification only if no other notification with the same tag exists
+  self.registration.getNotifications({ tag: notificationOptions.tag }).then((notifications) => {
+    if (notifications.length === 0) {
+      self.registration.showNotification(title, notificationOptions);
+    } else {
+      console.log('Notification with this tag already exists.');
+    }
+  });
 });
 
 
