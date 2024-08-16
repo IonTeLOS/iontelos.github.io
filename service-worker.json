@@ -11,7 +11,7 @@ self.addEventListener('push', event => {
   let data = {
     title: 'New Notification',
     body: 'You have a new message.',
-    icon: '/marko/app_Logo.png',
+    icon: '/marko/app_Logo192.png',
     url: '/'
   };
 
