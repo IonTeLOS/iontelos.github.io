@@ -3,12 +3,12 @@
   "name": "ntfy.sh Proof of Concept",
   "icons": [
     {
-      "src": "/marko/app_Logo192.png",
+      "src": "/icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/marko/app_Logo512.png",
+      "src": "/icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
