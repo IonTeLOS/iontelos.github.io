@@ -15,6 +15,7 @@
   ],
   "start_url": "/marko/ntfy.html",
   "display": "standalone",
+  "gcm_sender_id": "7036670175",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "scope": "/marko/"
