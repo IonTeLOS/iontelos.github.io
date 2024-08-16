@@ -8,31 +8,24 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('push', event => {
-  let data = {
-    title: 'New Notification',
-    body: 'You have a new message.',
-    icon: '/icon.png',
-    url: '/'
-  };
+  console.log('Push event received:', event);
 
-  if (event.data) {
-    data = event.data.json();
-  }
+  const data = event.data ? event.data.json() : {};
+  console.log('Push event data:', data);
 
   const options = {
-    body: data.body,
-    icon: data.icon,
-    data: { url: data.url }
+    body: data.body || 'You have a new notification.',
+    icon: data.icon || '/icon.png',
+    data: { url: data.url || '/' }
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    self.registration.showNotification(data.title || 'New Notification', options)
   );
 });
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       if (clientList.length > 0) {
@@ -43,3 +36,4 @@ self.addEventListener('notificationclick', event => {
     })
   );
 });
+
