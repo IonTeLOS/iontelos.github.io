@@ -3,7 +3,7 @@
     "https://www.w3.org/ns/activitystreams",
     "https://w3id.org/security/v1"
   ],
-  "id": "https://blinc@iontelos.github.io/actor/blinc",
+  "id": "https://iontelos.github.io/actor/blinc",
   "type": "Person",
   "preferredUsername": "Blingo",
   "inbox": "https://107ffea14491.ngrok-free.app/inbox",
@@ -11,8 +11,8 @@
   "followers": "https://107ffea14491.ngrok-free.app/followers",
   "following": "https://107ffea14491.ngrok-free.app/following",
   "publicKey": {
-    "id": "https://blinc@iontelos.github.io/actor/blinc/actor/blinc#main-key",
-    "owner": "https://blinc@iontelos.github.io/actor/blinc/actor/blinc",
+    "id": "https://iontelos.github.io/actor/blinc#main-key",
+    "owner": "https://iontelos.github.io/actor/blinc",
     "publicKeyPem": "-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAny/GAALugik6MHSpal2m
 RrsL2fBdtz2UkGFg9Tfb0Tlj5OtBCBXqRv3uMtGn+ntr/sktX4DSR3HhnyEQddBg
