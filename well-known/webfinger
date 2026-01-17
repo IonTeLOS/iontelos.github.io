@@ -1,0 +1,13 @@
+{
+  "subject": "acct:blinc@iontelos.github.io",
+  "aliases": [
+      "https://iontelos.github.io/actor/blinc"
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://iontelos.github.io/actor/blinc"
+    }
+  ]
+}
